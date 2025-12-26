@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Luyện Nốt Nhạc Piano 🎹</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 600px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .option-group {
+            margin-bottom: 30px;
+        }
+
+        .option-group h2 {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .option.selected {
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .staff-container {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .mic-status {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #764ba2;
+            flex: 1;
+            padding: 15px;
+            font-size: 1em;
+        }
+
+        .feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 5em;
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(0); }
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .result-title {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-stat {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .bar-label {
+            width: 60px;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .bar-fill {
+            flex: 1;
+            height: 30px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .option {
+                font-size: 1em;
+                padding: 12px 15px;
+            }
+            
+            .btn {
+                font-size: 1.1em;
+                padding: 15px 30px;
+            }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            animation: float 2s ease-out forwards;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Menu Screen -->
+        <div id="menuScreen" class="screen active">
+            <h1>🎹 Luyện Nốt Nhạc</h1>
+            
+            <div class="option-group">
+                <h2>📊 Chọn độ khó:</h2>
+                <div class="option selected" data-difficulty="easy">
+                    🟢 Dễ (5 nốt cơ bản)
+                </div>
+                <div class="option" data-difficulty="medium">
+                    🟡 Trung bình (8 nốt)
+                </div>
+                <div class="option" data-difficulty="hard">
+                    🔴 Khó (12 nốt đầy đủ)
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h2>🎼 Chọn khoá nhạc:</h2>
+                <div class="option selected" data-clef="treble">
+                    🎼 Khoá Sol (Treble)
+                </div>
+                <div class="option" data-clef="bass">
+                    🎵 Khoá Fa (Bass)
+                </div>
+                <div class="option" data-clef="both">
+                    🎹 Cả hai khoá
+                </div>
+            </div>
+
+            <button class="btn" id="startBtn">BẮT ĐẦU 🚀</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <h1>🎤 Đang luyện tập</h1>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="scoreDisplay">0</div>
+                    <div class="stat-label">Điểm</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="streakDisplay">0</div>
+                    <div class="stat-label">Liên tiếp</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalDisplay">0/10</div>
+                    <div class="stat-label">Tiến độ</div>
+                </div>
+            </div>
+
+            <div class="mic-status" id="micStatus">
+                🎤 Đang lắng nghe...
+            </div>
+
+            <div class="staff-container">
+                <canvas id="staffCanvas" width="500" height="200"></canvas>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" id="hintBtn">💡 Gợi ý</button>
+                <button class="btn btn-secondary" id="skipBtn">⏭️ Bỏ qua</button>
+                <button class="btn btn-secondary" id="quitBtn">🏠 Thoát</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="resultScreen" class="screen">
+            <h1>🎊 Kết quả</h1>
+            
+            <div class="result-card">
+                <div class="result-title" id="resultTitle">Xuất sắc!</div>
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <div style="font-size: 2em;" id="finalScore">0</div>
+                        <div>Tổng điểm</div>
+                    </div>
+                    <div class="result-stat">
+                        <div style="font-size: 2em;" id="accuracy">0%</div>
+                        <div>Độ chính xác</div>
+                    </div>
+                    <div class="result-stat">
+                        <div style="font-size: 2em;" id="correct">0</div>
+                        <div>Câu đúng</div>
+                    </div>
+                    <div class="result-stat">
+                        <div style="font-size: 2em;" id="maxStreak">0</div>
+                        <div>Chuỗi dài nhất</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2 style="color: #764ba2; margin-bottom: 15px;">📊 Nốt nhạc cần luyện:</h2>
+                <div id="noteChart"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" id="playAgainBtn" style="flex: 1;">🔄 Chơi lại</button>
+                <button class="btn btn-secondary" id="menuBtn" style="flex: 1;">🏠 Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            difficulty: 'easy',
+            clef: 'treble',
+            currentNote: null,
+            score: 0,
+            streak: 0,
+            maxStreak: 0,
+            total: 0,
+            correct: 0,
+            noteStats: {},
+            targetCount: 10,
+            isListening: false
+        };
+
+        // Note definitions with frequencies
+        const notes = {
+            treble: {
+                easy: [
+                    { name: 'C4', freq: 261.63, line: 0, ledger: true },
+                    { name: 'E4', freq: 329.63, line: 1 },
+                    { name: 'G4', freq: 392.00, line: 2 },
+                    { name: 'B4', freq: 493.88, line: 3 },
+                    { name: 'D5', freq: 587.33, line: 4 }
+                ],
+                medium: [
+                    { name: 'C4', freq: 261.63, line: 0, ledger: true },
+                    { name: 'D4', freq: 293.66, line: 0.5 },
+                    { name: 'E4', freq: 329.63, line: 1 },
+                    { name: 'F4', freq: 349.23, line: 1.5 },
+                    { name: 'G4', freq: 392.00, line: 2 },
+                    { name: 'A4', freq: 440.00, line: 2.5 },
+                    { name: 'B4', freq: 493.88, line: 3 },
+                    { name: 'C5', freq: 523.25, line: 3.5 }
+                ],
+                hard: [
+                    { name: 'C4', freq: 261.63, line: 0, ledger: true },
+                    { name: 'D4', freq: 293.66, line: 0.5 },
+                    { name: 'E4', freq: 329.63, line: 1 },
+                    { name: 'F4', freq: 349.23, line: 1.5 },
+                    { name: 'G4', freq: 392.00, line: 2 },
+                    { name: 'A4', freq: 440.00, line: 2.5 },
+                    { name: 'B4', freq: 493.88, line: 3 },
+                    { name: 'C5', freq: 523.25, line: 3.5 },
+                    { name: 'D5', freq: 587.33, line: 4 },
+                    { name: 'E5', freq: 659.25, line: 4.5 },
+                    { name: 'F5', freq: 698.46, line: 5 },
+                    { name: 'G5', freq: 783.99, line: 5.5 }
+                ]
+            },
+            bass: {
+                easy: [
+                    { name: 'E2', freq: 82.41, line: 1 },
+                    { name: 'G2', freq: 98.00, line: 2 },
+                    { name: 'B2', freq: 123.47, line: 3 },
+                    { name: 'D3', freq: 146.83, line: 4 },
+                    { name: 'F3', freq: 174.61, line: 5 }
+                ],
+                medium: [
+                    { name: 'D2', freq: 73.42, line: 0.5 },
+                    { name: 'E2', freq: 82.41, line: 1 },
+                    { name: 'F2', freq: 87.31, line: 1.5 },
+                    { name: 'G2', freq: 98.00, line: 2 },
+                    { name: 'A2', freq: 110.00, line: 2.5 },
+                    { name: 'B2', freq: 123.47, line: 3 },
+                    { name: 'C3', freq: 130.81, line: 3.5 },
+                    { name: 'D3', freq: 146.83, line: 4 }
+                ],
+                hard: [
+                    { name: 'C2', freq: 65.41, line: 0, ledger: true },
+                    { name: 'D2', freq: 73.42, line: 0.5 },
+                    { name: 'E2', freq: 82.41, line: 1 },
+                    { name: 'F2', freq: 87.31, line: 1.5 },
+                    { name: 'G2', freq: 98.00, line: 2 },
+                    { name: 'A2', freq: 110.00, line: 2.5 },
+                    { name: 'B2', freq: 123.47, line: 3 },
+                    { name: 'C3', freq: 130.81, line: 3.5 },
+                    { name: 'D3', freq: 146.83, line: 4 },
+                    { name: 'E3', freq: 164.81, line: 4.5 },
+                    { name: 'F3', freq: 174.61, line: 5 },
+                    { name: 'G3', freq: 196.00, line: 5.5 }
+                ]
+            }
+        };
+
+        // Audio Context
+        let audioContext;
+        let analyser;
+        let microphone;
+        let dataArray;
+
+        // Canvas
+        const canvas = document.getElementById('staffCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Menu interactions
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const group = this.parentElement;
+                group.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                if (this.dataset.difficulty) {
+                    gameState.difficulty = this.dataset.difficulty;
+                }
+                if (this.dataset.clef) {
+                    gameState.clef = this.dataset.clef;
+                }
+            });
+        });
+
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('hintBtn').addEventListener('click', showHint);
+        document.getElementById('skipBtn').addEventListener('click', skipNote);
+        document.getElementById('quitBtn').addEventListener('click', quitGame);
+        document.getElementById('playAgainBtn').addEventListener('click', () => {
+            showScreen('menuScreen');
+        });
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            showScreen('menuScreen');
+        });
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        async function startGame() {
+            try {
+                // Initialize audio
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                microphone = audioContext.createMediaStreamSource(stream);
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 4096;
+                microphone.connect(analyser);
+                
+                const bufferLength = analyser.fftSize;
+                dataArray = new Float32Array(bufferLength);
+
+                // Reset game state
+                gameState.score = 0;
+                gameState.streak = 0;
+                gameState.maxStreak = 0;
+                gameState.total = 0;
+                gameState.correct = 0;
+                gameState.noteStats = {};
+                gameState.isListening = true;
+
+                showScreen('gameScreen');
+                nextNote();
+                detectPitch();
+
+            } catch (error) {
+                alert('Không thể truy cập microphone! Vui lòng cho phép quyền truy cập microphone.');
+                console.error(error);
+            }
+        }
+
+        function nextNote() {
+            if (gameState.total >= gameState.targetCount) {
+                endGame();
+                return;
+            }
+
+            const clefToUse = gameState.clef === 'both' 
+                ? (Math.random() > 0.5 ? 'treble' : 'bass')
+                : gameState.clef;
+            
+            const notePool = notes[clefToUse][gameState.difficulty];
+            
+            // Weighted selection based on performance
+            let selectedNote;
+            const poorNotes = Object.entries(gameState.noteStats)
+                .filter(([_, stats]) => stats.correct / stats.total < 0.5)
+                .map(([name, _]) => name);
+            
+            if (poorNotes.length > 0 && Math.random() > 0.3) {
+                const poorNoteName = poorNotes[Math.floor(Math.random() * poorNotes.length)];
+                selectedNote = notePool.find(n => n.name === poorNoteName) || notePool[Math.floor(Math.random() * notePool.length)];
+            } else {
+                selectedNote = notePool[Math.floor(Math.random() * notePool.length)];
+            }
+
+            gameState.currentNote = { ...selectedNote, clef: clefToUse };
+            
+            if (!gameState.noteStats[selectedNote.name]) {
+                gameState.noteStats[selectedNote.name] = { correct: 0, total: 0 };
+            }
+
+            drawStaff();
+            updateStats();
+        }
+
+        function drawStaff() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const note = gameState.currentNote;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const lineSpacing = 15;
+            const staffWidth = 400;
+
+            // Draw staff lines
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            for (let i = 0; i < 5; i++) {
+                const y = centerY - 30 + i * lineSpacing;
+                ctx.beginPath();
+                ctx.moveTo(centerX - staffWidth/2, y);
+                ctx.lineTo(centerX + staffWidth/2, y);
+                ctx.stroke();
+            }
+
+            // Draw clef
+            ctx.font = 'bold 60px serif';
+            ctx.fillStyle = '#667eea';
+            if (note.clef === 'treble') {
+                ctx.fillText('𝄞', centerX - staffWidth/2 + 20, centerY + 20);
+            } else {
+                ctx.fillText('𝄢', centerX - staffWidth/2 + 20, centerY + 10);
+            }
+
+            // Draw note
+            const noteY = centerY - 30 + (4 - note.line) * lineSpacing;
+            
+            // Ledger lines if needed
+            if (note.ledger) {
+                ctx.beginPath();
+                ctx.moveTo(centerX - 20, noteY);
+                ctx.lineTo(centerX + 20, noteY);
+                ctx.stroke();
+            }
+
+            // Note head
+            ctx.fillStyle = '#764ba2';
+            ctx.beginPath();
+            ctx.ellipse(centerX, noteY, 12, 9, -20 * Math.PI / 180, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Stem
+            ctx.strokeStyle = '#764ba2';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX + 10, noteY);
+            ctx.lineTo(centerX + 10, noteY - 50);
+            ctx.stroke();
+        }
+
+        function detectPitch() {
+            if (!gameState.isListening) return;
+
+            analyser.getFloatTimeDomainData(dataArray);
+            const frequency = autoCorrelate(dataArray, audioContext.sampleRate);
+
+            if (frequency > 0) {
+                checkNote(frequency);
+            }
+
+            requestAnimationFrame(detectPitch);
+        }
+
+        function autoCorrelate(buffer, sampleRate) {
+            let size = buffer.length;
+            let maxSamples = Math.floor(size / 2);
+            let bestOffset = -1;
+            let bestCorrelation = 0;
+            let rms = 0;
+
+            for (let i = 0; i < size; i++) {
+                rms += buffer[i] * buffer[i];
+            }
+            rms = Math.sqrt(rms / size);
+
+            if (rms < 0.01) return -1;
+
+            let lastCorrelation = 1;
+            for (let offset = 1; offset < maxSamples; offset++) {
+                let correlation = 0;
+                for (let i = 0; i < maxSamples; i++) {
+                    correlation += Math.abs(buffer[i] - buffer[i + offset]);
+                }
+                correlation = 1 - (correlation / maxSamples);
+                if (correlation > 0.9 && correlation > lastCorrelation) {
+                    const foundCorrelation = correlation;
+                    const foundOffset = offset;
+                    if (foundCorrelation > bestCorrelation) {
+                        bestCorrelation = foundCorrelation;
+                        bestOffset = foundOffset;
+                    }
+                }
+                lastCorrelation = correlation;
+            }
+
+            if (bestCorrelation > 0.01) {
+                return sampleRate / bestOffset;
+            }
+            return -1;
+        }
+
+        let lastCheckTime = 0;
+        function checkNote(frequency) {
+            const now = Date.now();
+            if (now - lastCheckTime < 500) return;
+
+            const targetFreq = gameState.currentNote.freq;
+            const tolerance = 0.03;
+            const ratio = frequency / targetFreq;
+
+            if (ratio > (1 - tolerance) && ratio < (1 + tolerance)) {
+                lastCheckTime = now;
+                correctAnswer();
+            }
+        }
+
+        function correctAnswer() {
+            gameState.score += 10 + gameState.streak * 2;
+            gameState.streak++;
+            gameState.maxStreak = Math.max(gameState.maxStreak, gameState.streak);
+            gameState.total++;
+            gameState.correct++;
+            gameState.noteStats[gameState.currentNote.name].correct++;
+            gameState.noteStats[gameState.currentNote.name].total++;
+
+            showFeedback('✨');
+            playSound(gameState.currentNote.freq);
+            createParticles();
+            
+            setTimeout(() => nextNote(), 800);
+        }
+
+        function wrongAnswer() {
+            gameState.streak = 0;
+            gameState.total++;
+            gameState.noteStats[gameState.currentNote.name].total++;
+            
+            showFeedback('❌');
+            showAnswer();
+            
+            setTimeout(() => nextNote(), 2000);
+        }
+
+        function showHint() {
+            document.getElementById('micStatus').textContent = `💡 Đáp án: ${gameState.currentNote.name}`;
+            setTimeout(() => {
+                document.getElementById('micStatus').textContent = '🎤 Đang lắng nghe...';
+            }, 2000);
+        }
+
+        function skipNote() {
+            wrongAnswer();
+        }
+
+        function showAnswer() {
+            document.getElementById('micStatus').textContent = `✅ Đáp án: ${gameState.currentNote.name}`;
+            setTimeout(() => {
+                document.getElementById('micStatus').textContent = '🎤 Đang lắng nghe...';
+            }, 2000);
+        }
+
+        function showFeedback(emoji) {
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+            feedback.textContent = emoji;
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 500);
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = ['⭐', '✨', '💫', '🌟'][Math.floor(Math.random() * 4)];
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.top = Math.random() * window.innerHeight + 'px';
+                particle.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
+
+        function playSound(frequency) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function updateStats() {
+            document.getElementById('scoreDisplay').textContent = gameState.score;
+            document.getElementById('streakDisplay').textContent = gameState.streak;
+            document.getElementById('totalDisplay').textContent = `${gameState.total}/${gameState.targetCount}`;
+        }
+
+        function quitGame() {
+            gameState.isListening = false;
+            if (microphone) microphone.disconnect();
+            if (analyser) analyser.disconnect();
+            showScreen('menuScreen');
+        }
+
+        function endGame() {
+            gameState.isListening = false;
+            if (microphone) microphone.disconnect();
+            if (analyser) analyser.disconnect();
+
+            const accuracy = Math.round((gameState.correct / gameState.total) * 100);
+            
+            document.getElementById('finalScore').textContent = gameState.score;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('correct').textContent = gameState.correct;
+            document.getElementById('maxStreak').textContent = gameState.maxStreak;
+
+            let title = 'Tốt lắm!';
+            if (accuracy >= 90) title = '🏆 Xuất sắc!';
+            else if (accuracy >= 70) title = '⭐ Giỏi quá!';
+            else if (accuracy >= 50) title = '👍 Khá đấy!';
+            document.getElementById('resultTitle').textContent = title;
+
+            // Draw chart
+            const chartContainer = document.getElementById('noteChart');
+            chartContainer.innerHTML = '';
+            
+            const sortedNotes = Object.entries(gameState.noteStats)
+                .sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total))
+                .slice(0, 5);
+
+            sortedNotes.forEach(([name, stats]) => {
+                const accuracy = Math.round((stats.correct / stats.total) * 100);
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.innerHTML = `
+                    <div class="bar-label">${name}</div>
+                    <div class="bar-fill" style="width: ${accuracy}%">${accuracy}%</div>
+                `;
+                chartContainer.appendChild(bar);
+            });
+
+            showScreen('resultScreen');
+        }
+    </script>
+</body>
+</html>
