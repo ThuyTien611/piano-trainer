@@ -3,22 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Luyện Nốt Nhạc Piano 🎹</title>
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Luyện Nốt Nhạc Piano Pro</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkx1eeG7h24gTuG7kXQgTmjhuqFjIFBpYW5vIiwKICAic2hvcnRfbmFtZSI6ICJQaWFubyBUcmFpbmVyIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiM2NjdlZWEiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxOTInIGhlaWdodD0nMTkyJyUzRSUzQ3RleHQgeD0nNTAlMjUnIHk9JzUwJTI1JyBmb250LXNpemU9JzEyMCcgdGV4dC1hbmNob3I9J21pZGRsZScgZHk9Jy4zZW0nJTNFJUYwJTlGJThFJUI5JTNDJTJGdGV4dCUzRSUzQyUyRnN2ZyUzRSIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            user-select: none;
         }
 
         .container {
@@ -34,11 +49,11 @@
 
         .screen {
             display: none;
+            animation: fadeIn 0.3s ease-in;
         }
 
         .screen.active {
             display: block;
-            animation: fadeIn 0.3s ease-in;
         }
 
         @keyframes fadeIn {
@@ -46,22 +61,74 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h1 {
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.8em;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-gradient);
+            color: white;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Loading Screen */
+        .loading {
             text-align: center;
-            color: #667eea;
-            font-size: 2em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            padding: 60px 20px;
         }
 
-        .option-group {
-            margin-bottom: 30px;
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
         }
 
-        .option-group h2 {
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* Menu */
+        h2 {
             font-size: 1.2em;
             color: #333;
-            margin-bottom: 15px;
+            margin: 20px 0 15px;
         }
 
         .option {
@@ -76,9 +143,8 @@
             font-size: 1.1em;
         }
 
-        .option:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .option:active {
+            transform: scale(0.98);
         }
 
         .option.selected {
@@ -87,7 +153,7 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             color: white;
             border: none;
             padding: 18px 40px;
@@ -100,9 +166,8 @@
             font-weight: bold;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn:disabled {
@@ -110,36 +175,91 @@
             cursor: not-allowed;
         }
 
+        /* Stats */
         .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            padding: 20px;
-            border-radius: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .stat {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
-            color: #764ba2;
+            color: var(--secondary);
         }
 
         .stat-label {
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #666;
             margin-top: 5px;
         }
 
+        /* Realtime Display */
+        .realtime-display {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .detected-note {
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .detected-freq {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .tuner-bar {
+            height: 40px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tuner-fill {
+            height: 100%;
+            background: var(--success);
+            transition: width 0.1s, background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tuner-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+        }
+
+        /* Staff */
         .staff-container {
             background: white;
             padding: 40px 20px;
             border-radius: 20px;
-            margin: 30px 0;
+            margin: 20px 0;
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
             min-height: 250px;
             display: flex;
@@ -152,54 +272,91 @@
             height: auto;
         }
 
-        .mic-status {
+        .target-note {
             text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            border-radius: 15px;
-            margin: 20px 0;
-            font-size: 1.2em;
-            animation: pulse 2s infinite;
+            font-size: 1.3em;
+            color: var(--secondary);
+            margin-top: 15px;
+            font-weight: bold;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
+        /* Controls */
         .controls {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: 20px;
         }
 
         .btn-secondary {
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            color: #764ba2;
+            color: var(--secondary);
+            padding: 15px 10px;
+            font-size: 0.95em;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.95);
+        }
+
+        /* Mode Tabs */
+        .mode-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            background: #f3f4f6;
+            padding: 5px;
+            border-radius: 15px;
+        }
+
+        .mode-tab {
             flex: 1;
-            padding: 15px;
-            font-size: 1em;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: #666;
         }
 
-        .feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 5em;
-            z-index: 1000;
-            animation: popIn 0.5s ease-out;
-            pointer-events: none;
+        .mode-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        @keyframes popIn {
-            0% { transform: translate(-50%, -50%) scale(0); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(0); }
+        /* Calibration */
+        .calibration-guide {
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid var(--warning);
         }
 
+        .calibration-guide h3 {
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .calibration-status {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--success);
+            padding: 20px;
+        }
+
+        /* Result */
         .result-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             color: white;
             padding: 30px;
             border-radius: 20px;
@@ -233,6 +390,11 @@
             margin: 20px 0;
         }
 
+        .chart-container h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
         .bar {
             display: flex;
             align-items: center;
@@ -242,13 +404,13 @@
         .bar-label {
             width: 60px;
             font-weight: bold;
-            color: #764ba2;
+            color: var(--secondary);
         }
 
         .bar-fill {
             flex: 1;
             height: 30px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             border-radius: 5px;
             transition: width 0.5s ease;
             display: flex;
@@ -258,92 +420,190 @@
             font-weight: bold;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-                border-radius: 20px;
-            }
-            
-            h1 {
-                font-size: 1.5em;
-            }
-            
-            .option {
-                font-size: 1em;
-                padding: 12px 15px;
-            }
-            
-            .btn {
-                font-size: 1.1em;
-                padding: 15px 30px;
-            }
+        /* Feedback */
+        .feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 5em;
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(0); }
         }
 
         .particle {
             position: fixed;
             pointer-events: none;
             animation: float 2s ease-out forwards;
+            font-size: 2em;
         }
 
         @keyframes float {
             0% {
-                transform: translateY(0) scale(1);
+                transform: translateY(0) rotate(0deg);
                 opacity: 1;
             }
             100% {
-                transform: translateY(-100px) scale(0);
+                transform: translateY(-150px) rotate(360deg);
                 opacity: 0;
+            }
+        }
+
+        /* Status Messages */
+        .status-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .status-listening {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-waiting {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .detected-note {
+                font-size: 2.5em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="screen">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <h2>Đang khởi động...</h2>
+                <p>Chuẩn bị microphone</p>
+            </div>
+        </div>
+
         <!-- Menu Screen -->
-        <div id="menuScreen" class="screen active">
-            <h1>🎹 Luyện Nốt Nhạc</h1>
-            
-            <div class="option-group">
-                <h2>📊 Chọn độ khó:</h2>
-                <div class="option selected" data-difficulty="easy">
-                    🟢 Dễ (5 nốt cơ bản)
-                </div>
-                <div class="option" data-difficulty="medium">
-                    🟡 Trung bình (8 nốt)
-                </div>
-                <div class="option" data-difficulty="hard">
-                    🔴 Khó (12 nốt đầy đủ)
-                </div>
+        <div id="menuScreen" class="screen">
+            <div class="header">
+                <h1>🎹 Piano Trainer</h1>
             </div>
 
-            <div class="option-group">
-                <h2>🎼 Chọn khoá nhạc:</h2>
-                <div class="option selected" data-clef="treble">
-                    🎼 Khoá Sol (Treble)
-                </div>
-                <div class="option" data-clef="bass">
-                    🎵 Khoá Fa (Bass)
-                </div>
-                <div class="option" data-clef="both">
-                    🎹 Cả hai khoá
-                </div>
+            <h2>📊 Chọn độ khó:</h2>
+            <div class="option selected" data-difficulty="easy">
+                🟢 Dễ - 5 nốt cơ bản
+            </div>
+            <div class="option" data-difficulty="medium">
+                🟡 Trung bình - 8 nốt
+            </div>
+            <div class="option" data-difficulty="hard">
+                🔴 Khó - 12 nốt đầy đủ
             </div>
 
+            <h2>🎼 Chọn khoá nhạc:</h2>
+            <div class="option selected" data-clef="treble">
+                🎼 Khoá Sol (Treble)
+            </div>
+            <div class="option" data-clef="bass">
+                🎵 Khoá Fa (Bass)
+            </div>
+            <div class="option" data-clef="both">
+                🎹 Cả hai khoá
+            </div>
+
+            <h2>⚙️ Độ khó nhận diện:</h2>
+            <div class="option selected" data-tolerance="normal">
+                ⚖️ Bình thường (±3%)
+            </div>
+            <div class="option" data-tolerance="relaxed">
+                😊 Dễ dãi (±5%)
+            </div>
+            <div class="option" data-tolerance="strict">
+                🎯 Nghiêm ngặt (±1%)
+            </div>
+
+            <button class="btn" id="calibrateBtn">🎚️ Hiệu chỉnh đàn</button>
             <button class="btn" id="startBtn">BẮT ĐẦU 🚀</button>
+        </div>
+
+        <!-- Calibration Screen -->
+        <div id="calibrationScreen" class="screen">
+            <div class="header">
+                <h1>🎚️ Hiệu chỉnh</h1>
+                <div class="header-icons">
+                    <button class="icon-btn" id="calBackBtn">🏠</button>
+                </div>
+            </div>
+
+            <div class="calibration-guide">
+                <h3>📝 Hướng dẫn:</h3>
+                <p>1. Bấm phím <strong>Đô giữa (C4)</strong> trên đàn piano</p>
+                <p>2. Giữ phím 2-3 giây</p>
+                <p>3. App sẽ tự động điều chỉnh</p>
+            </div>
+
+            <div class="realtime-display">
+                <div class="detected-note" id="calNote">---</div>
+                <div class="detected-freq" id="calFreq">Chờ bấm phím...</div>
+                <div class="tuner-bar">
+                    <div class="tuner-indicator"></div>
+                    <div class="tuner-fill" id="calBar" style="width: 50%"></div>
+                </div>
+            </div>
+
+            <div class="calibration-status" id="calStatus">
+                Đang chờ...
+            </div>
+
+            <button class="btn" id="skipCalBtn">⏭️ Bỏ qua hiệu chỉnh</button>
         </div>
 
         <!-- Game Screen -->
         <div id="gameScreen" class="screen">
-            <h1>🎤 Đang luyện tập</h1>
-            
-            <div class="stats">
+            <div class="header">
+                <h1>🎤 Luyện tập</h1>
+                <div class="header-icons">
+                    <button class="icon-btn" id="quitBtn">🏠</button>
+                </div>
+            </div>
+
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="practice">🎯 Luyện</button>
+                <button class="mode-tab" data-mode="free">🎵 Tự do</button>
+                <button class="mode-tab" data-mode="tuner">🎚️ Tuner</button>
+            </div>
+
+            <div class="stats" id="statsDisplay">
                 <div class="stat">
                     <div class="stat-value" id="scoreDisplay">0</div>
                     <div class="stat-label">Điểm</div>
                 </div>
                 <div class="stat">
                     <div class="stat-value" id="streakDisplay">0</div>
-                    <div class="stat-label">Liên tiếp</div>
+                    <div class="stat-label">Streak</div>
                 </div>
                 <div class="stat">
                     <div class="stat-value" id="totalDisplay">0/10</div>
@@ -351,25 +611,33 @@
                 </div>
             </div>
 
-            <div class="mic-status" id="micStatus">
-                🎤 Đang lắng nghe...
+            <div class="realtime-display">
+                <div class="detected-note" id="detectedNote">---</div>
+                <div class="detected-freq" id="detectedFreq">Chờ âm thanh...</div>
+                <div class="tuner-bar">
+                    <div class="tuner-indicator"></div>
+                    <div class="tuner-fill" id="tunerBar" style="width: 50%">50%</div>
+                </div>
             </div>
 
             <div class="staff-container">
                 <canvas id="staffCanvas" width="500" height="200"></canvas>
             </div>
+            <div class="target-note" id="targetNote">Nốt cần chơi: ---</div>
 
             <div class="controls">
-                <button class="btn btn-secondary" id="hintBtn">💡 Gợi ý</button>
-                <button class="btn btn-secondary" id="skipBtn">⏭️ Bỏ qua</button>
-                <button class="btn btn-secondary" id="quitBtn">🏠 Thoát</button>
+                <button class="btn-secondary" id="hintBtn">💡 Gợi ý</button>
+                <button class="btn-secondary" id="skipBtn">⏭️ Bỏ qua</button>
+                <button class="btn-secondary" id="pauseBtn">⏸️ Tạm dừng</button>
             </div>
         </div>
 
         <!-- Result Screen -->
         <div id="resultScreen" class="screen">
-            <h1>🎊 Kết quả</h1>
-            
+            <div class="header">
+                <h1>🎊 Kết quả</h1>
+            </div>
+
             <div class="result-card">
                 <div class="result-title" id="resultTitle">Xuất sắc!</div>
                 <div class="result-stats">
@@ -387,13 +655,13 @@
                     </div>
                     <div class="result-stat">
                         <div style="font-size: 2em;" id="maxStreak">0</div>
-                        <div>Chuỗi dài nhất</div>
+                        <div>Streak tốt nhất</div>
                     </div>
                 </div>
             </div>
 
             <div class="chart-container">
-                <h2 style="color: #764ba2; margin-bottom: 15px;">📊 Nốt nhạc cần luyện:</h2>
+                <h2>📊 Nốt cần luyện thêm:</h2>
                 <div id="noteChart"></div>
             </div>
 
@@ -409,6 +677,8 @@
         const gameState = {
             difficulty: 'easy',
             clef: 'treble',
+            tolerance: 'normal',
+            mode: 'practice',
             currentNote: null,
             score: 0,
             streak: 0,
@@ -417,75 +687,83 @@
             correct: 0,
             noteStats: {},
             targetCount: 10,
-            isListening: false
+            isListening: false,
+            calibrationOffset: 0
         };
 
-        // Note definitions with frequencies
+        // Tolerance settings
+        const toleranceMap = {
+            strict: 0.01,
+            normal: 0.03,
+            relaxed: 0.05
+        };
+
+        // Note definitions - VỊ TRÍ ĐÚNG (từ dưới lên)
         const notes = {
             treble: {
                 easy: [
-                    { name: 'C4', freq: 261.63, line: 0, ledger: true },
-                    { name: 'E4', freq: 329.63, line: 1 },
-                    { name: 'G4', freq: 392.00, line: 2 },
-                    { name: 'B4', freq: 493.88, line: 3 },
-                    { name: 'D5', freq: 587.33, line: 4 }
+                    { name: 'E4', freq: 329.63, line: 0 },      // Dòng 1 (dưới cùng)
+                    { name: 'G4', freq: 392.00, line: 1 },      // Dòng 2 ✅
+                    { name: 'B4', freq: 493.88, line: 2 },      // Dòng 3
+                    { name: 'D5', freq: 587.33, line: 3 },      // Dòng 4
+                    { name: 'F5', freq: 698.46, line: 4 }       // Dòng 5 (trên cùng)
                 ],
                 medium: [
-                    { name: 'C4', freq: 261.63, line: 0, ledger: true },
-                    { name: 'D4', freq: 293.66, line: 0.5 },
-                    { name: 'E4', freq: 329.63, line: 1 },
-                    { name: 'F4', freq: 349.23, line: 1.5 },
-                    { name: 'G4', freq: 392.00, line: 2 },
-                    { name: 'A4', freq: 440.00, line: 2.5 },
-                    { name: 'B4', freq: 493.88, line: 3 },
-                    { name: 'C5', freq: 523.25, line: 3.5 }
+                    { name: 'E4', freq: 329.63, line: 0 },
+                    { name: 'F4', freq: 349.23, line: 0.5 },    // Khe 1
+                    { name: 'G4', freq: 392.00, line: 1 },
+                    { name: 'A4', freq: 440.00, line: 1.5 },    // Khe 2
+                    { name: 'B4', freq: 493.88, line: 2 },
+                    { name: 'C5', freq: 523.25, line: 2.5 },    // Khe 3
+                    { name: 'D5', freq: 587.33, line: 3 },
+                    { name: 'E5', freq: 659.25, line: 3.5 }     // Khe 4
                 ],
                 hard: [
-                    { name: 'C4', freq: 261.63, line: 0, ledger: true },
-                    { name: 'D4', freq: 293.66, line: 0.5 },
-                    { name: 'E4', freq: 329.63, line: 1 },
-                    { name: 'F4', freq: 349.23, line: 1.5 },
-                    { name: 'G4', freq: 392.00, line: 2 },
-                    { name: 'A4', freq: 440.00, line: 2.5 },
-                    { name: 'B4', freq: 493.88, line: 3 },
-                    { name: 'C5', freq: 523.25, line: 3.5 },
-                    { name: 'D5', freq: 587.33, line: 4 },
-                    { name: 'E5', freq: 659.25, line: 4.5 },
-                    { name: 'F5', freq: 698.46, line: 5 },
-                    { name: 'G5', freq: 783.99, line: 5.5 }
+                    { name: 'C4', freq: 261.63, line: -1, ledger: true },
+                    { name: 'D4', freq: 293.66, line: -0.5 },
+                    { name: 'E4', freq: 329.63, line: 0 },
+                    { name: 'F4', freq: 349.23, line: 0.5 },
+                    { name: 'G4', freq: 392.00, line: 1 },
+                    { name: 'A4', freq: 440.00, line: 1.5 },
+                    { name: 'B4', freq: 493.88, line: 2 },
+                    { name: 'C5', freq: 523.25, line: 2.5 },
+                    { name: 'D5', freq: 587.33, line: 3 },
+                    { name: 'E5', freq: 659.25, line: 3.5 },
+                    { name: 'F5', freq: 698.46, line: 4 },
+                    { name: 'G5', freq: 783.99, line: 4.5 }
                 ]
             },
             bass: {
                 easy: [
-                    { name: 'E2', freq: 82.41, line: 1 },
-                    { name: 'G2', freq: 98.00, line: 2 },
-                    { name: 'B2', freq: 123.47, line: 3 },
-                    { name: 'D3', freq: 146.83, line: 4 },
-                    { name: 'F3', freq: 174.61, line: 5 }
+                    { name: 'G2', freq: 98.00, line: 0 },       // Dòng 1 (dưới cùng)
+                    { name: 'B2', freq: 123.47, line: 1 },      // Dòng 2
+                    { name: 'D3', freq: 146.83, line: 2 },      // Dòng 3
+                    { name: 'F3', freq: 174.61, line: 3 },      // Dòng 4
+                    { name: 'A3', freq: 220.00, line: 4 }       // Dòng 5 (trên cùng)
                 ],
                 medium: [
-                    { name: 'D2', freq: 73.42, line: 0.5 },
-                    { name: 'E2', freq: 82.41, line: 1 },
-                    { name: 'F2', freq: 87.31, line: 1.5 },
-                    { name: 'G2', freq: 98.00, line: 2 },
-                    { name: 'A2', freq: 110.00, line: 2.5 },
-                    { name: 'B2', freq: 123.47, line: 3 },
-                    { name: 'C3', freq: 130.81, line: 3.5 },
-                    { name: 'D3', freq: 146.83, line: 4 }
+                    { name: 'G2', freq: 98.00, line: 0 },
+                    { name: 'A2', freq: 110.00, line: 0.5 },
+                    { name: 'B2', freq: 123.47, line: 1 },
+                    { name: 'C3', freq: 130.81, line: 1.5 },
+                    { name: 'D3', freq: 146.83, line: 2 },
+                    { name: 'E3', freq: 164.81, line: 2.5 },
+                    { name: 'F3', freq: 174.61, line: 3 },
+                    { name: 'G3', freq: 196.00, line: 3.5 }
                 ],
                 hard: [
-                    { name: 'C2', freq: 65.41, line: 0, ledger: true },
-                    { name: 'D2', freq: 73.42, line: 0.5 },
-                    { name: 'E2', freq: 82.41, line: 1 },
-                    { name: 'F2', freq: 87.31, line: 1.5 },
-                    { name: 'G2', freq: 98.00, line: 2 },
-                    { name: 'A2', freq: 110.00, line: 2.5 },
-                    { name: 'B2', freq: 123.47, line: 3 },
-                    { name: 'C3', freq: 130.81, line: 3.5 },
-                    { name: 'D3', freq: 146.83, line: 4 },
-                    { name: 'E3', freq: 164.81, line: 4.5 },
-                    { name: 'F3', freq: 174.61, line: 5 },
-                    { name: 'G3', freq: 196.00, line: 5.5 }
+                    { name: 'E2', freq: 82.41, line: -1, ledger: true },
+                    { name: 'F2', freq: 87.31, line: -0.5 },
+                    { name: 'G2', freq: 98.00, line: 0 },
+                    { name: 'A2', freq: 110.00, line: 0.5 },
+                    { name: 'B2', freq: 123.47, line: 1 },
+                    { name: 'C3', freq: 130.81, line: 1.5 },
+                    { name: 'D3', freq: 146.83, line: 2 },
+                    { name: 'E3', freq: 164.81, line: 2.5 },
+                    { name: 'F3', freq: 174.61, line: 3 },
+                    { name: 'G3', freq: 196.00, line: 3.5 },
+                    { name: 'A3', freq: 220.00, line: 4 },
+                    { name: 'B3', freq: 246.94, line: 4.5 }
                 ]
             }
         };
@@ -495,10 +773,28 @@
         let analyser;
         let microphone;
         let dataArray;
+        let rafId;
 
         // Canvas
         const canvas = document.getElementById('staffCanvas');
         const ctx = canvas.getContext('2d');
+
+        // Load saved settings
+        function loadSettings() {
+            const saved = localStorage.getItem('pianoTrainerSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                gameState.calibrationOffset = settings.calibrationOffset || 0;
+            }
+        }
+
+        function saveSettings() {
+            localStorage.setItem('pianoTrainerSettings', JSON.stringify({
+                calibrationOffset: gameState.calibrationOffset
+            }));
+        }
+
+        loadSettings();
 
         // Menu interactions
         document.querySelectorAll('.option').forEach(option => {
@@ -507,18 +803,47 @@
                 group.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
                 
-                if (this.dataset.difficulty) {
-                    gameState.difficulty = this.dataset.difficulty;
+                if (this.dataset.difficulty) gameState.difficulty = this.dataset.difficulty;
+                if (this.dataset.clef) gameState.clef = this.dataset.clef;
+                if (this.dataset.tolerance) gameState.tolerance = this.dataset.tolerance;
+            });
+        });
+
+        // Mode tabs
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                gameState.mode = this.dataset.mode;
+                
+                // Show/hide stats based on mode
+                const statsDisplay = document.getElementById('statsDisplay');
+                if (gameState.mode === 'practice') {
+                    statsDisplay.style.display = 'grid';
+                } else {
+                    statsDisplay.style.display = 'none';
                 }
-                if (this.dataset.clef) {
-                    gameState.clef = this.dataset.clef;
+                
+                if (gameState.mode === 'tuner') {
+                    document.getElementById('targetNote').textContent = 'Chế độ Tuner - Bấm bất kỳ nốt nào';
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                } else if (gameState.currentNote) {
+                    drawStaff();
                 }
             });
         });
 
+        // Navigation
         document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('calibrateBtn').addEventListener('click', startCalibration);
+        document.getElementById('calBackBtn').addEventListener('click', () => showScreen('menuScreen'));
+        document.getElementById('skipCalBtn').addEventListener('click', () => {
+            stopAudio();
+            startGame();
+        });
         document.getElementById('hintBtn').addEventListener('click', showHint);
         document.getElementById('skipBtn').addEventListener('click', skipNote);
+        document.getElementById('pauseBtn').addEventListener('click', pauseGame);
         document.getElementById('quitBtn').addEventListener('click', quitGame);
         document.getElementById('playAgainBtn').addEventListener('click', () => {
             showScreen('menuScreen');
@@ -532,11 +857,16 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        async function startGame() {
+        async function initAudio() {
             try {
-                // Initialize audio
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    } 
+                });
                 microphone = audioContext.createMediaStreamSource(stream);
                 analyser = audioContext.createAnalyser();
                 analyser.fftSize = 4096;
@@ -544,27 +874,75 @@
                 
                 const bufferLength = analyser.fftSize;
                 dataArray = new Float32Array(bufferLength);
-
-                // Reset game state
-                gameState.score = 0;
-                gameState.streak = 0;
-                gameState.maxStreak = 0;
-                gameState.total = 0;
-                gameState.correct = 0;
-                gameState.noteStats = {};
-                gameState.isListening = true;
-
-                showScreen('gameScreen');
-                nextNote();
-                detectPitch();
-
+                
+                return true;
             } catch (error) {
-                alert('Không thể truy cập microphone! Vui lòng cho phép quyền truy cập microphone.');
+                alert('Không thể truy cập microphone! Vui lòng cho phép quyền truy cập.');
                 console.error(error);
+                return false;
             }
         }
 
+        function stopAudio() {
+            gameState.isListening = false;
+            if (rafId) cancelAnimationFrame(rafId);
+            if (microphone) {
+                microphone.disconnect();
+                microphone.mediaStream.getTracks().forEach(track => track.stop());
+            }
+            if (analyser) analyser.disconnect();
+            if (audioContext) audioContext.close();
+        }
+
+        async function startCalibration() {
+            showScreen('loadingScreen');
+            const success = await initAudio();
+            if (!success) {
+                showScreen('menuScreen');
+                return;
+            }
+            
+            showScreen('calibrationScreen');
+            gameState.isListening = true;
+            detectPitchForCalibration();
+        }
+
+        async function startGame() {
+            showScreen('loadingScreen');
+            
+            if (!audioContext) {
+                const success = await initAudio();
+                if (!success) {
+                    showScreen('menuScreen');
+                    return;
+                }
+            }
+
+            // Reset game state
+            gameState.score = 0;
+            gameState.streak = 0;
+            gameState.maxStreak = 0;
+            gameState.total = 0;
+            gameState.correct = 0;
+            gameState.noteStats = {};
+            gameState.isListening = true;
+            gameState.mode = 'practice';
+
+            showScreen('gameScreen');
+            nextNote();
+            detectPitch();
+        }
+
         function nextNote() {
+            if (gameState.mode === 'tuner' || gameState.mode === 'free') {
+                // No target note in these modes
+                if (gameState.mode === 'tuner') {
+                    document.getElementById('targetNote').textContent = 'Chế độ Tuner - Bấm bất kỳ nốt nào';
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                return;
+            }
+
             if (gameState.total >= gameState.targetCount) {
                 endGame();
                 return;
@@ -576,10 +954,10 @@
             
             const notePool = notes[clefToUse][gameState.difficulty];
             
-            // Weighted selection based on performance
+            // Weighted selection
             let selectedNote;
             const poorNotes = Object.entries(gameState.noteStats)
-                .filter(([_, stats]) => stats.correct / stats.total < 0.5)
+                .filter(([_, stats]) => stats.total > 0 && stats.correct / stats.total < 0.5)
                 .map(([name, _]) => name);
             
             if (poorNotes.length > 0 && Math.random() > 0.3) {
@@ -602,18 +980,21 @@
         function drawStaff() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
+            if (!gameState.currentNote) return;
+            
             const note = gameState.currentNote;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const lineSpacing = 15;
             const staffWidth = 400;
 
-            // Draw staff lines
+            // Draw staff lines (5 lines)
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 2;
             
             for (let i = 0; i < 5; i++) {
-                const y = centerY - 30 + i * lineSpacing;
+                // Draw from bottom to top: line 0 at bottom
+                const y = centerY + 30 - i * lineSpacing;
                 ctx.beginPath();
                 ctx.moveTo(centerX - staffWidth/2, y);
                 ctx.lineTo(centerX + staffWidth/2, y);
@@ -624,86 +1005,249 @@
             ctx.font = 'bold 60px serif';
             ctx.fillStyle = '#667eea';
             if (note.clef === 'treble') {
-                ctx.fillText('𝄞', centerX - staffWidth/2 + 20, centerY + 20);
+                ctx.fillText('𝄞', centerX - staffWidth/2 + 20, centerY + 35);
             } else {
-                ctx.fillText('𝄢', centerX - staffWidth/2 + 20, centerY + 10);
+                ctx.fillText('𝄢', centerX - staffWidth/2 + 20, centerY + 25);
             }
 
-            // Draw note
-            const noteY = centerY - 30 + (4 - note.line) * lineSpacing;
+            // Calculate note position (from bottom up)
+            const noteY = centerY + 30 - note.line * lineSpacing;
             
-            // Ledger lines if needed
-            if (note.ledger) {
-                ctx.beginPath();
-                ctx.moveTo(centerX - 20, noteY);
-                ctx.lineTo(centerX + 20, noteY);
-                ctx.stroke();
+            // Draw ledger lines if needed
+            if (note.ledger || note.line < 0 || note.line > 4) {
+                const ledgerLines = [];
+                if (note.line < 0) {
+                    for (let i = 0; i > note.line; i--) {
+                        ledgerLines.push(centerY + 30 - i * lineSpacing);
+                    }
+                } else if (note.line > 4) {
+                    for (let i = 5; i <= note.line; i++) {
+                        if (i % 1 === 0) {
+                            ledgerLines.push(centerY + 30 - i * lineSpacing);
+                        }
+                    }
+                }
+                
+                ledgerLines.forEach(y => {
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 20, y);
+                    ctx.lineTo(centerX + 20, y);
+                    ctx.stroke();
+                });
             }
 
-            // Note head
+            // Draw note head
             ctx.fillStyle = '#764ba2';
             ctx.beginPath();
             ctx.ellipse(centerX, noteY, 12, 9, -20 * Math.PI / 180, 0, 2 * Math.PI);
             ctx.fill();
 
-            // Stem
+            // Draw stem
             ctx.strokeStyle = '#764ba2';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(centerX + 10, noteY);
-            ctx.lineTo(centerX + 10, noteY - 50);
+            if (noteY < centerY) {
+                // Stem down for higher notes
+                ctx.moveTo(centerX - 10, noteY);
+                ctx.lineTo(centerX - 10, noteY + 50);
+            } else {
+                // Stem up for lower notes
+                ctx.moveTo(centerX + 10, noteY);
+                ctx.lineTo(centerX + 10, noteY - 50);
+            }
             ctx.stroke();
+        }
+
+        // YIN Algorithm for pitch detection
+        function yinPitchDetection(buffer, sampleRate) {
+            const threshold = 0.15;
+            const bufferSize = buffer.length;
+            const yinBuffer = new Float32Array(bufferSize / 2);
+
+            // Step 1: Difference function
+            for (let tau = 0; tau < yinBuffer.length; tau++) {
+                yinBuffer[tau] = 0;
+            }
+
+            for (let tau = 1; tau < yinBuffer.length; tau++) {
+                for (let i = 0; i < yinBuffer.length; i++) {
+                    const delta = buffer[i] - buffer[i + tau];
+                    yinBuffer[tau] += delta * delta;
+                }
+            }
+
+            // Step 2: Cumulative mean normalized difference
+            yinBuffer[0] = 1;
+            let runningSum = 0;
+            for (let tau = 1; tau < yinBuffer.length; tau++) {
+                runningSum += yinBuffer[tau];
+                yinBuffer[tau] *= tau / runningSum;
+            }
+
+            // Step 3: Absolute threshold
+            let tau = 2;
+            while (tau < yinBuffer.length) {
+                if (yinBuffer[tau] < threshold) {
+                    while (tau + 1 < yinBuffer.length && yinBuffer[tau + 1] < yinBuffer[tau]) {
+                        tau++;
+                    }
+                    break;
+                }
+                tau++;
+            }
+
+            if (tau === yinBuffer.length || yinBuffer[tau] >= threshold) {
+                return -1;
+            }
+
+            // Step 4: Parabolic interpolation
+            let betterTau = tau;
+            if (tau > 0 && tau < yinBuffer.length - 1) {
+                const s0 = yinBuffer[tau - 1];
+                const s1 = yinBuffer[tau];
+                const s2 = yinBuffer[tau + 1];
+                betterTau = tau + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
+            }
+
+            return sampleRate / betterTau;
         }
 
         function detectPitch() {
             if (!gameState.isListening) return;
 
             analyser.getFloatTimeDomainData(dataArray);
-            const frequency = autoCorrelate(dataArray, audioContext.sampleRate);
+            
+            // Check RMS
+            let rms = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                rms += dataArray[i] * dataArray[i];
+            }
+            rms = Math.sqrt(rms / dataArray.length);
+
+            if (rms < 0.01) {
+                document.getElementById('detectedNote').textContent = '---';
+                document.getElementById('detectedFreq').textContent = 'Chờ âm thanh...';
+                rafId = requestAnimationFrame(detectPitch);
+                return;
+            }
+
+            const frequency = yinPitchDetection(dataArray, audioContext.sampleRate);
 
             if (frequency > 0) {
-                checkNote(frequency);
+                updateRealtimeDisplay(frequency);
+                
+                if (gameState.mode === 'practice') {
+                    checkNote(frequency);
+                }
             }
 
-            requestAnimationFrame(detectPitch);
+            rafId = requestAnimationFrame(detectPitch);
         }
 
-        function autoCorrelate(buffer, sampleRate) {
-            let size = buffer.length;
-            let maxSamples = Math.floor(size / 2);
-            let bestOffset = -1;
-            let bestCorrelation = 0;
+        function detectPitchForCalibration() {
+            if (!gameState.isListening) return;
+
+            analyser.getFloatTimeDomainData(dataArray);
+            
             let rms = 0;
-
-            for (let i = 0; i < size; i++) {
-                rms += buffer[i] * buffer[i];
+            for (let i = 0; i < dataArray.length; i++) {
+                rms += dataArray[i] * dataArray[i];
             }
-            rms = Math.sqrt(rms / size);
+            rms = Math.sqrt(rms / dataArray.length);
 
-            if (rms < 0.01) return -1;
+            if (rms < 0.01) {
+                rafId = requestAnimationFrame(detectPitchForCalibration);
+                return;
+            }
 
-            let lastCorrelation = 1;
-            for (let offset = 1; offset < maxSamples; offset++) {
-                let correlation = 0;
-                for (let i = 0; i < maxSamples; i++) {
-                    correlation += Math.abs(buffer[i] - buffer[i + offset]);
+            const frequency = yinPitchDetection(dataArray, audioContext.sampleRate);
+
+            if (frequency > 0) {
+                updateCalibrationDisplay(frequency);
+                checkCalibration(frequency);
+            }
+
+            rafId = requestAnimationFrame(detectPitchForCalibration);
+        }
+
+        function updateRealtimeDisplay(frequency) {
+            const detectedNote = frequencyToNote(frequency);
+            document.getElementById('detectedNote').textContent = detectedNote.name;
+            document.getElementById('detectedFreq').textContent = `${Math.round(frequency)} Hz`;
+
+            // Update tuner bar
+            if (gameState.currentNote && gameState.mode !== 'tuner') {
+                const targetFreq = gameState.currentNote.freq * (1 + gameState.calibrationOffset);
+                const diff = (frequency - targetFreq) / targetFreq;
+                const percentage = Math.max(0, Math.min(100, 50 + diff * 500));
+                
+                const bar = document.getElementById('tunerBar');
+                bar.style.width = percentage + '%';
+                bar.textContent = Math.round(percentage) + '%';
+                
+                if (Math.abs(diff) < 0.01) {
+                    bar.style.background = 'var(--success)';
+                } else if (Math.abs(diff) < 0.03) {
+                    bar.style.background = 'var(--warning)';
+                } else {
+                    bar.style.background = 'var(--danger)';
                 }
-                correlation = 1 - (correlation / maxSamples);
-                if (correlation > 0.9 && correlation > lastCorrelation) {
-                    const foundCorrelation = correlation;
-                    const foundOffset = offset;
-                    if (foundCorrelation > bestCorrelation) {
-                        bestCorrelation = foundCorrelation;
-                        bestOffset = foundOffset;
-                    }
-                }
-                lastCorrelation = correlation;
+            } else {
+                document.getElementById('tunerBar').style.width = '50%';
+                document.getElementById('tunerBar').textContent = 'OK';
+                document.getElementById('tunerBar').style.background = 'var(--success)';
             }
+        }
 
-            if (bestCorrelation > 0.01) {
-                return sampleRate / bestOffset;
+        function updateCalibrationDisplay(frequency) {
+            const detectedNote = frequencyToNote(frequency);
+            document.getElementById('calNote').textContent = detectedNote.name;
+            document.getElementById('calFreq').textContent = `${Math.round(frequency)} Hz`;
+
+            const targetC4 = 261.63;
+            const diff = (frequency - targetC4) / targetC4;
+            const percentage = Math.max(0, Math.min(100, 50 + diff * 500));
+            
+            const bar = document.getElementById('calBar');
+            bar.style.width = percentage + '%';
+            
+            if (Math.abs(diff) < 0.01) {
+                bar.style.background = 'var(--success)';
+            } else if (Math.abs(diff) < 0.03) {
+                bar.style.background = 'var(--warning)';
+            } else {
+                bar.style.background = 'var(--danger)';
             }
-            return -1;
+        }
+
+        function checkCalibration(frequency) {
+            const targetC4 = 261.63;
+            const diff = (frequency - targetC4) / targetC4;
+            
+            if (Math.abs(diff) < 0.02) {
+                gameState.calibrationOffset = (frequency - targetC4) / targetC4;
+                saveSettings();
+                document.getElementById('calStatus').textContent = '✅ Đã hiệu chỉnh thành công!';
+                setTimeout(() => {
+                    stopAudio();
+                    startGame();
+                }, 1500);
+            }
+        }
+
+        function frequencyToNote(frequency) {
+            const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const A4 = 440;
+            const C0 = A4 * Math.pow(2, -4.75);
+            
+            const halfSteps = 12 * Math.log2(frequency / C0);
+            const octave = Math.floor(halfSteps / 12);
+            const noteIndex = Math.round(halfSteps % 12);
+            
+            return {
+                name: noteNames[noteIndex] + octave,
+                freq: frequency
+            };
         }
 
         let lastCheckTime = 0;
@@ -711,8 +1255,10 @@
             const now = Date.now();
             if (now - lastCheckTime < 500) return;
 
-            const targetFreq = gameState.currentNote.freq;
-            const tolerance = 0.03;
+            if (!gameState.currentNote) return;
+
+            const targetFreq = gameState.currentNote.freq * (1 + gameState.calibrationOffset);
+            const tolerance = toleranceMap[gameState.tolerance];
             const ratio = frequency / targetFreq;
 
             if (ratio > (1 - tolerance) && ratio < (1 + tolerance)) {
@@ -743,15 +1289,17 @@
             gameState.noteStats[gameState.currentNote.name].total++;
             
             showFeedback('❌');
-            showAnswer();
+            document.getElementById('targetNote').textContent = `✅ Đáp án: ${gameState.currentNote.name}`;
             
-            setTimeout(() => nextNote(), 2000);
+            setTimeout(() => {
+                nextNote();
+            }, 2000);
         }
 
         function showHint() {
-            document.getElementById('micStatus').textContent = `💡 Đáp án: ${gameState.currentNote.name}`;
+            document.getElementById('targetNote').textContent = `💡 Gợi ý: ${gameState.currentNote.name}`;
             setTimeout(() => {
-                document.getElementById('micStatus').textContent = '🎤 Đang lắng nghe...';
+                document.getElementById('targetNote').textContent = `Nốt cần chơi: ${gameState.currentNote.name}`;
             }, 2000);
         }
 
@@ -759,11 +1307,15 @@
             wrongAnswer();
         }
 
-        function showAnswer() {
-            document.getElementById('micStatus').textContent = `✅ Đáp án: ${gameState.currentNote.name}`;
-            setTimeout(() => {
-                document.getElementById('micStatus').textContent = '🎤 Đang lắng nghe...';
-            }, 2000);
+        function pauseGame() {
+            gameState.isListening = !gameState.isListening;
+            const btn = document.getElementById('pauseBtn');
+            if (gameState.isListening) {
+                btn.textContent = '⏸️ Tạm dừng';
+                detectPitch();
+            } else {
+                btn.textContent = '▶️ Tiếp tục';
+            }
         }
 
         function showFeedback(emoji) {
@@ -775,19 +1327,21 @@
         }
 
         function createParticles() {
-            for (let i = 0; i < 10; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = ['⭐', '✨', '💫', '🌟'][Math.floor(Math.random() * 4)];
-                particle.style.left = Math.random() * window.innerWidth + 'px';
-                particle.style.top = Math.random() * window.innerHeight + 'px';
-                particle.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 2000);
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.textContent = ['⭐', '✨', '💫', '🌟'][Math.floor(Math.random() * 4)];
+                    particle.style.left = (Math.random() * window.innerWidth) + 'px';
+                    particle.style.top = (Math.random() * window.innerHeight) + 'px';
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 2000);
+                }, i * 100);
             }
         }
 
         function playSound(frequency) {
+            if (!audioContext) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             
@@ -806,33 +1360,30 @@
 
         function updateStats() {
             document.getElementById('scoreDisplay').textContent = gameState.score;
-            document.getElementById('streakDisplay').textContent = gameState.streak;
+            document.getElementById('streakDisplay').textContent = gameState.streak + (gameState.streak > 0 ? '🔥' : '');
             document.getElementById('totalDisplay').textContent = `${gameState.total}/${gameState.targetCount}`;
+            document.getElementById('targetNote').textContent = `Nốt cần chơi: ${gameState.currentNote.name}`;
         }
 
         function quitGame() {
-            gameState.isListening = false;
-            if (microphone) microphone.disconnect();
-            if (analyser) analyser.disconnect();
+            stopAudio();
             showScreen('menuScreen');
         }
 
         function endGame() {
             gameState.isListening = false;
-            if (microphone) microphone.disconnect();
-            if (analyser) analyser.disconnect();
-
-            const accuracy = Math.round((gameState.correct / gameState.total) * 100);
+            
+            const accuracy = gameState.total > 0 ? Math.round((gameState.correct / gameState.total) * 100) : 0;
             
             document.getElementById('finalScore').textContent = gameState.score;
             document.getElementById('accuracy').textContent = accuracy + '%';
-            document.getElementById('correct').textContent = gameState.correct;
+            document.getElementById('correct').textContent = gameState.correct + '/' + gameState.total;
             document.getElementById('maxStreak').textContent = gameState.maxStreak;
 
-            let title = 'Tốt lắm!';
+            let title = '👍 Tốt lắm!';
             if (accuracy >= 90) title = '🏆 Xuất sắc!';
             else if (accuracy >= 70) title = '⭐ Giỏi quá!';
-            else if (accuracy >= 50) title = '👍 Khá đấy!';
+            else if (accuracy >= 50) title = '💪 Khá đấy!';
             document.getElementById('resultTitle').textContent = title;
 
             // Draw chart
@@ -840,22 +1391,30 @@
             chartContainer.innerHTML = '';
             
             const sortedNotes = Object.entries(gameState.noteStats)
+                .filter(([_, stats]) => stats.total > 0)
                 .sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total))
                 .slice(0, 5);
 
-            sortedNotes.forEach(([name, stats]) => {
-                const accuracy = Math.round((stats.correct / stats.total) * 100);
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                bar.innerHTML = `
-                    <div class="bar-label">${name}</div>
-                    <div class="bar-fill" style="width: ${accuracy}%">${accuracy}%</div>
-                `;
-                chartContainer.appendChild(bar);
-            });
+            if (sortedNotes.length === 0) {
+                chartContainer.innerHTML = '<p style="text-align: center; color: #666;">Chưa có dữ liệu</p>';
+            } else {
+                sortedNotes.forEach(([name, stats]) => {
+                    const accuracy = Math.round((stats.correct / stats.total) * 100);
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    bar.innerHTML = `
+                        <div class="bar-label">${name}</div>
+                        <div class="bar-fill" style="width: ${accuracy}%">${accuracy}%</div>
+                    `;
+                    chartContainer.appendChild(bar);
+                });
+            }
 
             showScreen('resultScreen');
         }
+
+        // Show menu on load
+        showScreen('menuScreen');
     </script>
 </body>
 </html>
